@@ -1,29 +1,29 @@
 
+
 const tabs = document.querySelectorAll(".tabBtn");
+const cards = document.querySelectorAll(".jobCard");
 let currentTab = "all";
 
-function updateCounts() {
-  const cards = document.querySelectorAll(".jobCard");
-
+function updateDashboard() {
   let interview = 0;
   let rejected = 0;
+  let total = document.querySelectorAll(".jobCard").length;
 
   cards.forEach(card => {
-    if (card.dataset.status === "interview") interview++;
-    if (card.dataset.status === "rejected") rejected++;
+    if(card.dataset.status === "interview") interview++;
+    if(card.dataset.status === "rejected") rejected++;
   });
 
   document.getElementById("interviewCount").innerText = interview;
   document.getElementById("rejectedCount").innerText = rejected;
-  document.getElementById("totalCount").innerText = cards.length;
+  document.getElementById("totalCount").innerText = total;
 }
 
-function filterCards() {
-  const cards = document.querySelectorAll(".jobCard");
+function filterJobs() {
   let visible = 0;
 
   cards.forEach(card => {
-    if (currentTab === "all" || card.dataset.status === currentTab) {
+    if(currentTab === "all" || card.dataset.status === currentTab){
       card.style.display = "block";
       visible++;
     } else {
@@ -35,44 +35,41 @@ function filterCards() {
 }
 
 tabs.forEach(tab => {
-  tab.addEventListener("click", function () {
-    tabs.forEach(btn => btn.classList.remove("bg-blue-700","text-white"));
-    this.classList.add("bg-blue-700","text-white");
-
+  tab.addEventListener("click", function(){
+    tabs.forEach(btn => btn.classList.remove("bg-blue-600","text-white"));
+    this.classList.add("bg-blue-600","text-white");
     currentTab = this.dataset.tab;
-    filterCards();
+    filterJobs();
   });
 });
 
-document.addEventListener("click", function (e) {
+document.addEventListener("click", function(e){
 
   const card = e.target.closest(".jobCard");
-  if (!card) return;
+  if(!card) return;
 
-  // Interview
-  if (e.target.innerText === "INTERVIEW") {
+  if(e.target.classList.contains("interviewBtn")){
     card.dataset.status = "interview";
-    card.querySelector(".statusBtn").innerText = "Interview";
-    updateCounts();
-    filterCards();
+    card.querySelector(".statusText").innerText = "Interview";
+    updateDashboard();
+    filterJobs();
   }
 
-  // Rejected
-  if (e.target.innerText === "REJECTED") {
+  if(e.target.classList.contains("rejectBtn")){
     card.dataset.status = "rejected";
-    card.querySelector(".statusBtn").innerText = "Rejected";
-    updateCounts();
-    filterCards();
+    card.querySelector(".statusText").innerText = "Rejected";
+    updateDashboard();
+    filterJobs();
   }
 
-  // Delete
-  if (e.target.innerText === "DELETE") {
+  if(e.target.classList.contains("deleteBtn")){
     card.remove();
-    updateCounts();
-    filterCards();
+    updateDashboard();
+    filterJobs();
   }
 
 });
 
-updateCounts();
-filterCards();
+updateDashboard();
+filterJobs();
+
